@@ -1,21 +1,50 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import tseslint from '@typescript-eslint/eslint-plugin'
-import tsParser from '@typescript-eslint/parser'
+import js from '@eslint/js';
+import globals from 'globals';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
 
 export default [
-  { languageOptions: { globals: globals.browser } },
+  // Базовые настройки для всего проекта
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+  },
   js.configs.recommended,
+
+  // Настройки для всех TypeScript файлов
   {
     files: ['**/*.ts'],
-    languageOptions: { parser: tsParser },
+    languageOptions: {
+      parser: tsParser,
+    },
     plugins: {
       '@typescript-eslint': tseslint,
     },
     rules: {
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/explicit-function-return-type': 'off',
     },
   },
-]
+
+  // Явные и чистые глобальные переменные для тестов Jest
+  {
+    files: ['**/*.test.ts'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        jest: 'readonly',
+      },
+    },
+  },
+];
