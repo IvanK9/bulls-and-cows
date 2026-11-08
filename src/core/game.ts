@@ -20,10 +20,10 @@ export const isValidGuess = (
   length: number,
   base: number
 ): boolean => {
-  // const testGuess = guess;
-  // const testLength = length;
-  // const testBase = base;
-  // console.log(testGuess, testLength, testBase);
-  console.log(guess, length, base);
-  return false;
+  const checlLength = guess.length === length;
+  const checkValid = [...guess].every(createDigitValidator(base));
+  const newSet = new Set(guess.toLowerCase());
+  const checkOrig = newSet.size === guess.length;
+
+  return checlLength && checkValid && checkOrig;
 };
