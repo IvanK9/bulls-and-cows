@@ -32,7 +32,16 @@ export const evaluateGuess = (
   secret: string,
   guess: string
 ): { bulls: number; cows: number } => {
-  console.log(secret, guess);
+  const secretLower = secret.toLowerCase();
+  const guessLower = guess.toLowerCase();
+  const guessChar = [...guessLower];
 
-  return { bulls: 0, cows: 0 };
+  const bullsCount = guessChar.filter(
+    (char, index) => char === secretLower[index]
+  ).length;
+  const cowCount = guessChar.filter(
+    (char, index) => secretLower.includes(char) && char !== secretLower[index]
+  ).length;
+
+  return { bulls: bullsCount, cows: cowCount };
 };
