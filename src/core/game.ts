@@ -45,3 +45,12 @@ export const evaluateGuess = (
 
   return { bulls: bullsCount, cows: cowCount };
 };
+
+export const generateSecret = (
+  length: number,
+  base: number,
+  random: () => number
+): string => {
+  console.log(length, base, random);
+  return '';
+};

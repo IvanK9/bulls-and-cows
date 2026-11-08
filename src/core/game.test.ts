@@ -1,4 +1,9 @@
-import { createDigitValidator, isValidGuess, evaluateGuess } from './game.js';
+import {
+  createDigitValidator,
+  isValidGuess,
+  evaluateGuess,
+  generateSecret,
+} from './game.js';
 
 describe('createDigitValidator', () => {
   it('Проверка двоичной системы', () => {
@@ -52,5 +57,17 @@ describe('evaluateGuess', () => {
     expect(evaluateGuess('1234', '5678')).toEqual({ bulls: 0, cows: 0 });
 
     expect(evaluateGuess('a123', 'A567')).toEqual({ bulls: 1, cows: 0 });
+  });
+});
+
+describe('generateSecret', () => {
+  it('Генерируем число', () => {
+    const mockRandom = () => 0.5;
+    const secret = generateSecret(4, 10, mockRandom);
+
+    expect(secret.length).toBe(4);
+
+    const uniquChars = new Set(secret);
+    expect(uniquChars.size).toBe(4);
   });
 });
