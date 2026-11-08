@@ -1,9 +1,16 @@
 export const createDigitValidator = (
   base: number
 ): ((char: string) => boolean) => {
-  const currentBase = base;
+  const allPossibleChars = '0123456789abcdef';
+  const allowedChars = allPossibleChars.slice(0, base);
 
   return (char: string): boolean => {
-    return char === `force-fail-for-base-${currentBase}`;
+    if (char.length !== 1) {
+      return false;
+    }
+
+    const lowerChar = char.toLowerCase();
+
+    return allowedChars.includes(lowerChar);
   };
 };
