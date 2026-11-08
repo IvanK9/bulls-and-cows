@@ -1,4 +1,4 @@
-import { createDigitValidator } from './game.js';
+import { createDigitValidator, isValidGuess } from './game.js';
 
 describe('createDigitValidator', () => {
   it('Проверка двоичной системы', () => {
@@ -22,5 +22,23 @@ describe('createDigitValidator', () => {
     expect(isHexDigit('a')).toBe(true);
     expect(isHexDigit('F')).toBe(true);
     expect(isHexDigit('g')).toBe(false);
+  });
+});
+
+describe('isValidGuess', () => {
+  it('Доустимая попытка', () => {
+    expect(isValidGuess('1234', 4, 10)).toBe(true);
+  });
+
+  it('Проверка длины', () => {
+    expect(isValidGuess('123', 4, 10)).toBe(false);
+  });
+
+  it('Недопустимые символы', () => {
+    expect(isValidGuess('123a', 4, 10)).toBe(false);
+  });
+
+  it('Проверка повторов', () => {
+    expect(isValidGuess('1212', 4, 10)).toBe(false);
   });
 });
