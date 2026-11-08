@@ -1,13 +1,27 @@
 import { createDefaultPreset } from 'ts-jest';
 
-const tsJestTransformCfg = createDefaultPreset().transform;
+const defaultPreset = createDefaultPreset();
 
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 export default {
   testEnvironment: 'node',
-  testMatch: ['**/src/**/*.test.ts'], // Чтобы Jest искал тесты только в папке src
-  transform: {
-    ...tsJestTransformCfg,
+  testMatch: ['**/src/**/*.test.ts'],
+
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
   },
+
+  transform: {
+    ...defaultPreset.transform,
+  },
+
+  globals: {
+    'ts-jest': {
+      diagnostics: {
+        ignoreCodes: [],
+      },
+    },
+  },
+
   clearMocks: true,
 };
