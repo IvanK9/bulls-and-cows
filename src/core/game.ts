@@ -62,7 +62,21 @@ const getAllowedChars = (base: number): string => {
   return allPossibleChars.slice(0, base);
 };
 
+const cache: Record<string, number> = {};
+
 export const countPossibleSecrets = (length: number, base: number): number => {
-  console.log(length, base);
-  return 0;
+  if (length === 0) {
+    return 1;
+  }
+
+  const cacheKey = `${length}-${base}`;
+
+  if (cache[cacheKey] !== undefined) {
+    return cache[cacheKey];
+  }
+
+  const result = base * countPossibleSecrets(length - 1, base - 1);
+  cache[cacheKey] = result;
+
+  return result;
 };
