@@ -27,3 +27,12 @@ export const isValidGuess = (
 
   return checlLength && checkValid && checkOrig;
 };
+
+export const evaluateGuess = (
+  secret: string,
+  guess: string
+): { bulls: number; cows: number } => {
+  console.log(secret, guess);
+
+  return { bulls: 0, cows: 0 };
+};

@@ -1,4 +1,4 @@
-import { createDigitValidator, isValidGuess } from './game.js';
+import { createDigitValidator, isValidGuess, evaluateGuess } from './game.js';
 
 describe('createDigitValidator', () => {
   it('Проверка двоичной системы', () => {
@@ -40,5 +40,17 @@ describe('isValidGuess', () => {
 
   it('Проверка повторов', () => {
     expect(isValidGuess('1212', 4, 10)).toBe(false);
+  });
+});
+
+describe('evaluateGuess', () => {
+  it('Считаем быков и коров', () => {
+    expect(evaluateGuess('1234', '1234')).toEqual({ bulls: 4, cows: 0 });
+
+    expect(evaluateGuess('1234', '1342')).toEqual({ bulls: 1, cows: 3 });
+
+    expect(evaluateGuess('1234', '5678')).toEqual({ bulls: 0, cows: 0 });
+
+    expect(evaluateGuess('a123', 'A567')).toEqual({ bulls: 1, cows: 0 });
   });
 });
