@@ -1,8 +1,7 @@
 export const createDigitValidator = (
   base: number
 ): ((char: string) => boolean) => {
-  const allPossibleChars = '0123456789abcdef';
-  const allowedChars = allPossibleChars.slice(0, base);
+  const allowedChars = getAllowedChars(base);
 
   return (char: string): boolean => {
     if (char.length !== 1) {
@@ -51,6 +50,14 @@ export const generateSecret = (
   base: number,
   random: () => number
 ): string => {
-  console.log(length, base, random);
-  return '';
+  const allowedChars = getAllowedChars(base);
+  const charsArray = [...allowedChars];
+  const shuffledChars = charsArray.sort(() => random() - 0.5);
+
+  return shuffledChars.slice(0, length).join('');
+};
+
+const getAllowedChars = (base: number): string => {
+  const allPossibleChars = '0123456789abcdef';
+  return allPossibleChars.slice(0, base);
 };
