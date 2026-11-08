@@ -61,3 +61,8 @@ const getAllowedChars = (base: number): string => {
   const allPossibleChars = '0123456789abcdef';
   return allPossibleChars.slice(0, base);
 };
+
+export const countPossibleSecrets = (length: number, base: number): number => {
+  console.log(length, base);
+  return 0;
+};

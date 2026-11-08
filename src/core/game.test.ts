@@ -3,6 +3,7 @@ import {
   isValidGuess,
   evaluateGuess,
   generateSecret,
+  countPossibleSecrets,
 } from './game.js';
 
 describe('createDigitValidator', () => {
@@ -69,5 +70,13 @@ describe('generateSecret', () => {
 
     const uniquChars = new Set(secret);
     expect(uniquChars.size).toBe(4);
+  });
+});
+
+describe('countPossibleSecrets', () => {
+  it('Считаем комбинации', () => {
+    expect(countPossibleSecrets(2, 2)).toBe(2);
+
+    expect(countPossibleSecrets(3, 10)).toBe(720);
   });
 });
