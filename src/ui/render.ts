@@ -140,6 +140,18 @@ export const renderGameBoard = (
   length: number,
   base: number
 ): void => {
+  const startTime = Date.now();
+
+  const timerBlock = document.createElement('div');
+  timerBlock.className = 'game__timer';
+  timerBlock.textContent = 'Время раунда: 0 сек.';
+  container.appendChild(timerBlock);
+
+  const timerInterval = setInterval(() => {
+    const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+    timerBlock.textContent = `Время раунда: ${elapsedSeconds}`;
+  }, 1000);
+
   const inputBlock = document.createElement('div');
   inputBlock.className = 'game__input-block';
 
@@ -227,7 +239,56 @@ export const renderGameBoard = (
     input.focus();
 
     if (bulls === length) {
-      console.log('Вы угадали число');
+      clearInterval(timerInterval);
+
+      const totalTimeSeconds = Math.floor((Date.now() - startTime) / 1000);
+      const totalAttempts = historyState.length;
+
+      input.disabled = true;
+      submitBtn.disabled = true;
+
+      const victoryBlock = document.createElement('div');
+      victoryBlock.className = 'game__victory-block';
+
+      const victoryTitle = document.createElement('h2');
+      victoryTitle.className = 'game__victory-title';
+      victoryTitle.textContent = 'Победа!!!';
+      victoryBlock.appendChild(victoryTitle);
+
+      const victoryStats = document.createElement('p');
+      victoryStats.className = 'game__victory-stats';
+      victoryStats.textContent = `Вы угадали число за ${totalAttempts} попыток(тки) и ${totalTimeSeconds} секунд(ы).`;
+      victoryBlock.appendChild(victoryStats);
+
+      const newGameBtn = document.createElement('button');
+      newGameBtn.className = 'game__new-game-btn';
+      newGameBtn.textContent = 'Новая игра';
+      victoryBlock.appendChild(newGameBtn);
+
+      container.insertBefore(victoryBlock, container.firstChild);
+
+      newGameBtn.addEventListener('click', () => {
+        const baseSelect = document.querySelector('.header__select-base');
+        const lengthSelect = document.querySelector('.header__select-length');
+        const startBtn = document.querySelector('.header__btn--start');
+
+        if (
+          baseSelect instanceof HTMLSelectElement &&
+          lengthSelect instanceof HTMLSelectElement &&
+          startBtn instanceof HTMLButtonElement
+        ) {
+          baseSelect.disabled = false;
+          lengthSelect.disabled = false;
+          startBtn.disabled = false;
+        }
+
+        container.textContent = '';
+        const welcomeText = document.createElement('p');
+        welcomeText.className = 'game__welcome-text';
+        welcomeText.textContent =
+          'Выберите настройки выше и нажмите кнопку "Старт раунда", чтобы начать игру.';
+        container.appendChild(welcomeText);
+      });
     }
   });
 };
