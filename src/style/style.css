@@ -222,7 +222,6 @@ header {
   gap: 5px;
 }
 
-
 .game__victory-block {
   text-align: center;
   padding: 20px;
@@ -259,13 +258,107 @@ header {
   background-color: var(--primary-hover);
 }
 
-
 .game__welcome-text {
   text-align: center;
   color: #7f8c8d;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header__btn-leaderboard {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.header__btn-leaderboard:hover {
+  background-color: var(--primary-hover);
+}
+
+.game__modal {
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  max-width: 650px;
+  width: 90%;
+}
+
+.game__modal::backdrop {
+  background: rgba(44, 62, 80, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.game__modal-content {
+  width: 100%;
+}
+
+.game__leaderboard-title {
+  margin: 0 0 20px 0;
+  font-size: 22px;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.game__table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.game__table th,
+.game__table td {
+  padding: 12px 15px;
+  text-align: center;
+  border: 1px solid #e6e9ed;
+}
+
+.game__table th {
+  background-color: #f8f9fa;
+  font-weight: 700;
+  color: #7f8c8d;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.game__no-records {
+  color: #95a5a6;
+  font-style: italic;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.game__modal-close-btn {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-left: auto;
+  display: block;
+}
+
+.game__modal-close-btn:hover {
+  background-color: var(--primary-hover);
 }

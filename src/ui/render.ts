@@ -6,10 +6,66 @@ import {
   isValidGuess,
 } from '../core/game.js';
 
+interface GameRecord {
+  attempts: number;
+  time: number;
+  base: number;
+  length: number;
+  date: string;
+}
+
+const getRecords = (): GameRecord[] => {
+  const data = localStorage.getItem('bulls_cows_records');
+  if (!data) return [];
+  try {
+    return JSON.parse(data) as GameRecord[];
+  } catch {
+    return [];
+  }
+};
+
+const saveRecord = (
+  attempts: number,
+  time: number,
+  base: number,
+  length: number
+): void => {
+  const currentRecords = getRecords();
+  const newRecord: GameRecord = {
+    attempts,
+    time,
+    base,
+    length,
+    date: new Date().toLocaleDateString('ru-RU'),
+  };
+  const updatedRecords = [...currentRecords, newRecord];
+  updatedRecords.sort((a, b) =>
+    a.attempts !== b.attempts ? a.attempts - b.attempts : a.time - b.time
+  );
+  localStorage.setItem(
+    'bulls_cows_records',
+    JSON.stringify(updatedRecords.slice(0, 10))
+  );
+};
+
 export const initSettingsScreen = (): void => {
   const body = document.body;
 
   body.textContent = '';
+
+  const modal = document.createElement('dialog');
+  modal.className = 'game__modal';
+  const modalContent = document.createElement('div');
+  modalContent.className = 'game__modal-content';
+  const closeModalBtn = document.createElement('button');
+  closeModalBtn.className = 'game__modal-close-btn';
+  closeModalBtn.textContent = 'Закрыть';
+
+  modal.appendChild(modalContent);
+  modal.appendChild(closeModalBtn);
+  body.appendChild(modal);
+
+  closeModalBtn.addEventListener('click', () => modal.close());
 
   const header = document.createElement('header');
   const сontainer = document.createElement('div');
@@ -84,6 +140,16 @@ export const initSettingsScreen = (): void => {
   combinationsText.className = 'header__combinations';
   combinationsText.className = 'header__combinations';
   settingsPanel.appendChild(combinationsText);
+
+  const leaderboardBtn = document.createElement('button');
+  leaderboardBtn.className = 'header__btn-leaderboard';
+  leaderboardBtn.textContent = 'Рекорды';
+  settingsPanel.appendChild(leaderboardBtn);
+
+  leaderboardBtn.addEventListener('click', () => {
+    fillLeaderboardTable(modalContent);
+    modal.showModal();
+  });
 
   const startButton = document.createElement('button');
   startButton.className = 'header__btn--start';
@@ -247,6 +313,8 @@ export const renderGameBoard = (
       input.disabled = true;
       submitBtn.disabled = true;
 
+      saveRecord(totalAttempts, totalTimeSeconds, base, length);
+
       const victoryBlock = document.createElement('div');
       victoryBlock.className = 'game__victory-block';
 
@@ -291,4 +359,57 @@ export const renderGameBoard = (
       });
     }
   });
+};
+
+const fillLeaderboardTable = (container: HTMLElement): void => {
+  container.textContent = '';
+
+  const title = document.createElement('h3');
+  title.className = 'game__leaderboard-title';
+  title.textContent = 'Топ лучших раундов';
+  container.appendChild(title);
+
+  const records = getRecords();
+
+  if (records.length === 0) {
+    const noRecords = document.createElement('p');
+    noRecords.className = 'game__no-records';
+    noRecords.textContent = 'Рекордов пока нет. Станьте первым!';
+    container.appendChild(noRecords);
+    return;
+  }
+
+  const table = document.createElement('table');
+  table.className = 'game__table';
+
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+  ['Место', 'Попытки', 'Время', 'Режим', 'Дата'].forEach((text) => {
+    const th = document.createElement('th');
+    th.textContent = text;
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  records.forEach((record, index) => {
+    const row = document.createElement('tr');
+    const cells = [
+      `#${index + 1}`,
+      `${record.attempts}`,
+      `${record.time} сек.`,
+      `Система: ${record.base} / Длина: ${record.length}`,
+      record.date,
+    ];
+    cells.forEach((text) => {
+      const td = document.createElement('td');
+      td.textContent = text;
+      row.appendChild(td);
+    });
+    tbody.appendChild(row);
+  });
+
+  table.appendChild(tbody);
+  container.appendChild(table);
 };
