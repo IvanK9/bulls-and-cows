@@ -1,0 +1,23 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# TypeScript
+*.tsbuildinfo
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Операционная система и IDE
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Локальные конфиги и секреты
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
