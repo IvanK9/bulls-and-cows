@@ -1,4 +1,10 @@
-import { countPossibleSecrets } from '../core/game.js';
+import {
+  countPossibleSecrets,
+  createDigitValidator,
+  evaluateGuess,
+  generateSecret,
+  isValidGuess,
+} from '../core/game.js';
 
 export const initSettingsScreen = (): void => {
   const body = document.body;
@@ -15,10 +21,14 @@ export const initSettingsScreen = (): void => {
   сontainer.appendChild(headerContainer);
 
   const main = document.createElement('main');
+  main.className = 'main';
   const mainContainer = document.createElement('div');
-  mainContainer.className = 'main__wrap';
-  mainContainer.id = 'game-area';
+  mainContainer.className = 'container';
+  const mainWrap = document.createElement('div');
+  mainWrap.className = 'main__wrap';
+  mainWrap.id = 'game-area';
   main.appendChild(mainContainer);
+  mainContainer.appendChild(mainWrap);
 
   const title = document.createElement('h1');
   title.className = 'header__title';
@@ -80,6 +90,21 @@ export const initSettingsScreen = (): void => {
   startButton.textContent = 'Старт раунда';
   headerContainer.appendChild(startButton);
 
+  startButton.addEventListener('click', () => {
+    const base = parseInt(baseSelect.value, 10);
+    const length = parseInt(lengthSelect.value, 10);
+
+    baseSelect.disabled = true;
+    lengthSelect.disabled = true;
+    startButton.disabled = true;
+
+    const secretCode = generateSecret(length, base, Math.random);
+
+    console.log(`[Разработка] Загаданное число: ${secretCode}`);
+    mainWrap.textContent = '';
+    renderGameBoard(mainWrap, secretCode, length, base);
+  });
+
   body.appendChild(header);
   body.appendChild(main);
 
@@ -107,4 +132,102 @@ export const initSettingsScreen = (): void => {
   lengthSelect.addEventListener('change', updateUiSettings);
 
   updateUiSettings();
+};
+
+export const renderGameBoard = (
+  container: HTMLElement,
+  secretCode: string,
+  length: number,
+  base: number
+): void => {
+  const inputBlock = document.createElement('div');
+  inputBlock.className = 'game__input-block';
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'game__input';
+  input.placeholder = `Введите ${length} цифр...`;
+  input.maxLength = length;
+  inputBlock.appendChild(input);
+
+  const submitBtn = document.createElement('button');
+  submitBtn.className = 'game__submit-btn';
+  submitBtn.textContent = 'Проверить';
+  inputBlock.appendChild(submitBtn);
+
+  container.appendChild(inputBlock);
+
+  const errorBlock = document.createElement('div');
+  errorBlock.className = 'game__error';
+  container.appendChild(errorBlock);
+
+  const historyBlock = document.createElement('div');
+  historyBlock.className = 'game__history';
+
+  const historyTitle = document.createElement('h3');
+  historyTitle.className = 'game__history-title';
+  historyTitle.textContent = 'История попыток';
+  historyBlock.appendChild(historyTitle);
+
+  const historyList = document.createElement('div');
+  historyList.className = 'game__history-list';
+  historyBlock.appendChild(historyList);
+
+  container.appendChild(historyBlock);
+
+  const isValidChar = createDigitValidator(base);
+
+  input.addEventListener('input', () => {
+    errorBlock.textContent = '';
+    const chars = [...input.value];
+    const filteredChars = chars.filter(isValidChar);
+
+    input.value = filteredChars.join('');
+  });
+
+  let historyState: Array<{ guess: string; bulls: number; cows: number }> = [];
+
+  submitBtn.addEventListener('click', () => {
+    const guess = input.value;
+    if (!isValidGuess(guess, length, base)) {
+      errorBlock.textContent = `Ошибка! Введите ровно ${length} уникальных числа выбранной системы.`;
+      return;
+    }
+
+    errorBlock.textContent = '';
+
+    const isDuplicate = historyState.some((entry) => entry.guess === guess);
+    if (isDuplicate) {
+      errorBlock.textContent = 'Вы уже пробовали это число!';
+      return;
+    }
+
+    const { bulls, cows } = evaluateGuess(secretCode, guess);
+
+    const newEntry = { guess, bulls, cows };
+    historyState = [...historyState, newEntry];
+
+    const item = document.createElement('div');
+    item.className = 'game__history-item';
+
+    const guessSpan = document.createElement('span');
+    guessSpan.className = 'game__history-guess';
+    guessSpan.textContent = guess;
+
+    const resultSpan = document.createElement('span');
+    resultSpan.className = 'game__history-result';
+    resultSpan.textContent = `Быки: ${bulls}, Коровы: ${cows}`;
+
+    item.appendChild(guessSpan);
+    item.appendChild(resultSpan);
+
+    historyList.insertBefore(item, historyList.firstChild);
+
+    input.value = '';
+    input.focus();
+
+    if (bulls === length) {
+      console.log('Вы угадали число');
+    }
+  });
 };

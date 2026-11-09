@@ -51,6 +51,7 @@ body {
 }
 
 header {
+  margin-bottom: 25px;
   background-color: var(--header-bg);
   box-shadow: var(--shadow);
   padding: 15px 0;
@@ -66,7 +67,6 @@ header {
   flex-wrap: wrap;
   gap: 15px;
 }
-
 
 .header__title {
   margin: 0;
@@ -119,3 +119,84 @@ header {
   background-color: var(--primary-hover);
 }
 
+.game__input-block {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.game__input {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 2px solid #ccd1d9;
+  border-radius: var(--border-radius);
+  outline: none;
+  font-family: inherit;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+.game__input:focus {
+  border-color: var(--primary-color);
+}
+
+.game__submit-btn {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.game__submit-btn:hover {
+  background-color: #27ae60;
+}
+
+.game__error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-bottom: 15px;
+  min-height: 20px;
+  font-weight: 500;
+}
+
+/* История ходов */
+.game__history {
+  margin-top: 25px;
+  border-top: 2px dashed #e6e9ed;
+  padding-top: 20px;
+}
+
+.game__history-title {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+}
+
+.game__history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.game__history-item {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f8f9fa;
+  padding: 10px 15px;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--primary-color);
+}
+
+.game__history-guess {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.game__history-result {
+  color: #555;
+}
